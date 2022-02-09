@@ -76,7 +76,7 @@ class CalculateCostTests() {
     @Test
     fun `test solution`() {
         solution = listOf(12, 12, 29, 11, 29, 11, 2, 2, 9, 9, 0, 34, 5, 5, 34, 20, 20, 27, 27, 4, 4, 0, 21, 21, 3, 3, 10, 14, 14, 10, 15, 15, 0, 25, 25, 8, 22, 22, 33, 33, 31, 31, 8, 0, 19, 23, 23, 18, 18, 19, 32, 32, 0, 7, 17, 17, 7, 30, 24, 24, 30, 26, 26, 0, 28, 28, 13, 13, 1, 1, 0, 6, 6, 16, 16, 35, 35)
-        val world2 = parseInput("src/main/resources/Call_035_Vehicle_07.txt")
+        val world2 = parseInput("src/main/resources/Call_35_Vehicle_7.txt")
         cost = calculateCost(solution, world2)
         val result = 6001019L
         assertEquals(cost, result)
