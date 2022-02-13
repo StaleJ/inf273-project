@@ -28,7 +28,7 @@ fun main() {
         val bestCost = calculateCost(best, world)
         val improvement = 100 * (initialCost - bestCost) / initialCost
         println("              | Average objective | Best objective | Improvement (%) | Running time |")
-        println("Random search |    ${average / 10}   |    $bestCost    |    ${improvement}%    |    ${timeInMillis}ms\n")
+        println("Random search |    ${average / 10}   |    $bestCost    |    ${improvement}%    |    ${timeInMillis}s\n")
         println(best)
         println()
     }
