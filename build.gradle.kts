@@ -12,7 +12,10 @@ repositories {
 }
 
 dependencies {
+    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation(kotlin("test"))
+    implementation("io.github.microutils:kotlin-logging-jvm:2.1.20")
+    implementation("org.slf4j:slf4j-simple:1.7.26")
 }
 
 tasks.test {
