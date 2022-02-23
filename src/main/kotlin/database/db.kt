@@ -1,3 +1,5 @@
+package database
+
 import mu.KotlinLogging
 import java.sql.Array
 import java.sql.Connection
@@ -52,5 +54,5 @@ fun main() {
 }
 
 fun insertResultToDB(call: Int, vehicle: Int, result: Result) {
-
+    val sql = ""
 }
