@@ -146,3 +146,4 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/gradle,kotlin,jetbrains+all
 src/main/kotlin/PropertiesDB.kt
+src/main/resources/run.txt
