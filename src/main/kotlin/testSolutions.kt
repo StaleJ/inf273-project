@@ -5,7 +5,7 @@ import utils.parseInput
 
 fun main() {
     val world = parseInput("src/main/resources/Call_7_Vehicle_3.txt")
-    val list = listOf(5, 5, 2, 2, 0, 7, 7, 0, 1, 3, 3, 1, 0, 6, 6, 4, 4).toMutableList()
+    val list = listOf(4, 4, 2, 2, 0, 5, 5, 3, 3, 0, 7, 7, 0, 6, 6, 1, 1).toMutableList()
     testCall7Vehicle3(world,list)
 
 }
