@@ -1,9 +1,11 @@
 package database
 
+import PropertiesDB
 import mu.KotlinLogging
 import java.sql.Array
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.SQLException
 
 private val logger = KotlinLogging.logger {}
 
@@ -13,7 +15,7 @@ data class Result(
     val average: Int,
     val best: Int,
     val improvement: Int,
-    val time: Float,
+    val time: Double,
     val solution: Array
 )
 
@@ -32,9 +34,6 @@ fun main() {
     val connection = getConnection()
 
 
-
-
-
     val sql = "SELECT * FROM call_7_vehicle_3"
     val query = connection.prepareStatement(sql)
 
@@ -46,13 +45,30 @@ fun main() {
         val average = result.getInt("average")
         val best = result.getInt("best")
         val improvement = result.getInt("improvement")
-        val time = result.getFloat("time")
+        val time = result.getDouble("time")
         val solution = result.getArray("solution")
         results.add(Result(id, name, average, best, improvement, time, solution))
     }
-    println(results)
+    insertResultToDB(7, 3, results[0])
 }
 
 fun insertResultToDB(call: Int, vehicle: Int, result: Result) {
-    val sql = ""
+    val connection = getConnection()
+
+
+
+    val sql =
+        "INSERT INTO call_${call}_vehicle_${vehicle}(name, average, best, improvement, time, solution) values ('${result.name}', ${result.average}, ${result.best}, ${result.improvement}, ${result.time}, '${result.solution}')"
+    println(sql)
+    val query = connection.prepareStatement(sql)
+    try {
+        query.executeQuery()
+    } catch (e: SQLException) {
+        val statement = "SELECT setval('the_primary_key_sequence', (SELECT MAX(id) FROM call_${call}_vehicle_${vehicle})+1)"
+        val secondQuery = connection.prepareStatement(statement)
+        secondQuery.executeQuery()
+        query.executeQuery()
+    }
+
+
 }
