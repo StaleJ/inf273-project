@@ -31,6 +31,9 @@ fun main() {
         println("Random search |    ${average / 10}   |    $bestCost    |    ${improvement}%    |    ${timeInMillis/1000}s\n")
         println(best)
         println()
+
+
+
     }
 
 
