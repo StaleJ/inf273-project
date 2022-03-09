@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import utils.parseInput
 
-internal class OneReinsertKtTest {
+internal class OneInsertKtTest {
     private lateinit var world: World
 
 

@@ -1,7 +1,7 @@
 import algorithms.localSearch
 import algorithms.simulatedAnnealing
 import classes.World
-import operators.oneReinsertAlgorithm
+import operators.oneInsert
 import utils.calculateCost
 import utils.parseInput
 import kotlin.system.measureTimeMillis
@@ -44,8 +44,8 @@ fun runInstance(
 
 
 fun main() {
-    runInstance(::localSearch, ::oneReinsertAlgorithm, "Local Search-1-insert")
-    runInstance(::simulatedAnnealing, ::oneReinsertAlgorithm, "Simulated Annealing-1-insert")
-    runInstance(::random, ::oneReinsertAlgorithm, "Random")
+    runInstance(::localSearch, ::oneInsert, "Local Search-1-insert")
+    runInstance(::simulatedAnnealing, ::oneInsert, "Simulated Annealing-1-insert")
+    runInstance(::random, ::oneInsert, "Random")
 
 }
