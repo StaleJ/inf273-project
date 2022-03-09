@@ -3,9 +3,13 @@ import utils.calculateCost
 import utils.feasibilityCheck
 
 
-fun random(world: World): MutableList<Int> {
-    val initialSolution = createWorstCase(world)
-    var bestSolution = initialSolution
+fun random(
+    solution: MutableList<Int>,
+    o: (s: MutableList<Int>, w: World) -> MutableList<Int>,
+    world: World
+): MutableList<Int> {
+
+    var bestSolution = solution
 
     for (i in 0 until 10000) {
         val current = randomSolution(world)

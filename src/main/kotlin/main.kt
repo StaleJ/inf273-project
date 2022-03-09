@@ -35,7 +35,7 @@ fun runInstance(
         val bestCost = calculateCost(bestSolution, world)
         val improvement = 100 * (initialCost - bestCost) / initialCost
         println("              | Average objective | Best objective | Improvement (%) | Running time |")
-        println("$name |    ${average / 10}   |    $bestCost    |    ${improvement}%    |    ${(time/1000)}ms\n")
+        println("$name |    ${average / 10}   |    $bestCost    |    ${improvement}%    |    ${(time/1000)}s\n")
         println(bestSolution)
         println()
     }
@@ -46,5 +46,6 @@ fun runInstance(
 fun main() {
     runInstance(::localSearch, ::oneReinsertAlgorithm, "Local Search-1-insert")
     runInstance(::simulatedAnnealing, ::oneReinsertAlgorithm, "Simulated Annealing-1-insert")
+    runInstance(::random, ::oneReinsertAlgorithm, "Random")
 
 }
