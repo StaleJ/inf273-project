@@ -1,3 +1,6 @@
+import algorithms.localSearch
+import classes.World
+import operators.oneReinsertAlgorithm
 import utils.calculateCost
 import utils.parseInput
 import kotlin.system.measureTimeMillis
@@ -6,6 +9,30 @@ fun main() {
 
     val calls = listOf(7, 18, 35, 80, 130, 300)
     val vehicles = listOf(3, 5, 7, 20, 40, 90)
+
+    for ((i, v) in calls.withIndex()) {
+        println("Instance name (e.g. CALL $v AND VEHICLE ${vehicles[i]})")
+        val world: World = parseInput("src/main/resources/Call_${v}_Vehicle_${vehicles[i]}.txt")
+        val initialSolution = createWorstCase(world)
+        val initialCost = calculateCost(initialSolution, world)
+        var bestSolution = initialSolution
+        var average: Long = 0
+        val time = measureTimeMillis {
+            for (j in 0 until 10) {
+                val oneInsert = localSearch(initialSolution, ::oneReinsertAlgorithm, world)
+                val oneInsertCost = calculateCost(oneInsert, world)
+                average += oneInsertCost
+                if (oneInsertCost < calculateCost(bestSolution, world)) {
+                    bestSolution = oneInsert
+                }
+            }
+        }
+        val oneInsertBestCost = calculateCost(bestSolution, world)
+        val onInsertImprovement = 100 * (initialCost - oneInsertBestCost) / initialCost
+        println("Local Search 1-insert |    ${average / 10}   |    $oneInsertBestCost    |    ${onInsertImprovement}%    |    ${time / 1000}s\n")
+        println(bestSolution.toString() + "\n")
+
+    }
 
 
     for ((i, v) in calls.withIndex()) {
@@ -28,13 +55,14 @@ fun main() {
         val bestCost = calculateCost(best, world)
         val improvement = 100 * (initialCost - bestCost) / initialCost
         println("              | Average objective | Best objective | Improvement (%) | Running time |")
-        println("Random search |    ${average / 10}   |    $bestCost    |    ${improvement}%    |    ${timeInMillis/1000}s\n")
+        println("Random search |    ${average / 10}   |    $bestCost    |    ${improvement}%    |    ${timeInMillis / 1000}s\n")
         println(best)
         println()
 
 
-
     }
+
+
 
 
 }
