@@ -2,6 +2,7 @@ import algorithms.localSearch
 import algorithms.simulatedAnnealing
 import classes.World
 import operators.oneInsert
+import operators.twoExchange
 import utils.calculateCost
 import utils.parseInput
 import kotlin.system.measureTimeMillis
@@ -22,20 +23,22 @@ fun runInstance(
         val initialCost = calculateCost(initialSolution, world)
         var bestSolution = initialSolution
         var average: Long = 0
-        val time = measureTimeMillis {
-            for (j in 0 until 10) {
-                val incumbent = algorithm(initialSolution, operator, world)
-                val incumbentCost = calculateCost(incumbent, world)
-                average += incumbentCost
-                if (incumbentCost < calculateCost(bestSolution, world)) {
-                    bestSolution = incumbent
-                }
+        var time: Long = 0
+        for (j in 0 until 10) {
+            val incumbent: MutableList<Int>
+            time += measureTimeMillis { incumbent = algorithm(initialSolution, operator, world) }
+
+            val incumbentCost = calculateCost(incumbent, world)
+            average += incumbentCost
+            if (incumbentCost < calculateCost(bestSolution, world)) {
+                bestSolution = incumbent
             }
+
         }
         val bestCost = calculateCost(bestSolution, world)
         val improvement = 100 * (initialCost - bestCost) / initialCost
         println("              | Average objective | Best objective | Improvement (%) | Running time |")
-        println("$name |    ${average / 10}   |    $bestCost    |    ${improvement}%    |    ${(time/1000)}s\n")
+        println("$name |    ${average / 10}   |    $bestCost    |    ${improvement}%    |    ${time / 10}ms\n")
         println(bestSolution)
         println()
     }
@@ -46,6 +49,7 @@ fun runInstance(
 fun main() {
     runInstance(::localSearch, ::oneInsert, "Local Search-1-insert")
     runInstance(::simulatedAnnealing, ::oneInsert, "Simulated Annealing-1-insert")
-    runInstance(::random, ::oneInsert, "Random")
+    runInstance(::localSearch, ::twoExchange, "Local two-exchange")
+    runInstance(::simulatedAnnealing, ::twoExchange, "Simulated Annealing two-exchange")
 
 }
