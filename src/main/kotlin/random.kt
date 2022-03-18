@@ -29,11 +29,9 @@ fun createWorstCase(world: World): MutableList<Int> {
     val numberOfVehicles: Int = world.vehicles.size
     val worstCase: MutableList<Int> = emptyList<Int>().toMutableList()
 
-    for (i in 1..numberOfVehicles) {
-        worstCase.add(0)
-    }
+    for (i in 1..numberOfVehicles) worstCase.add(0)
 
-    for (i in 1..numberOfCalls) {
+    (1..numberOfCalls).forEach { i ->
         worstCase.add(i)
         worstCase.add(i)
     }
@@ -49,13 +47,9 @@ private fun randomSolution(world: World): MutableList<Int> {
     val solution: MutableList<Int> = emptyList<Int>().toMutableList()
     var tempList = emptyList<Int>().toMutableList()
 
-    for (i in 0 until numberOfVehicle) {
-        list.add(0)
-    }
+    for (i in 0 until numberOfVehicle) list.add(0)
 
-    for (i in 1..numberOfCalls) {
-        list.add(i)
-    }
+    for (i in 1..numberOfCalls) list.add(i)
 
     for (i in list.indices) {
         val randomElement = list.random()
