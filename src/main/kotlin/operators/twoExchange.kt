@@ -3,23 +3,10 @@ package operators
 import classes.World
 import createWorstCase
 import utils.parseInput
+import kotlin.math.max
 import kotlin.random.Random
 
 fun twoExchange(currentSolution: MutableList<Int>, world: World): MutableList<Int> {
-    /*
-
-    [0,0,0,1,1,2,2,3,3,4,4] = size = 11
-    n = 7, m = 9
-    l[7] = 3 og l[9] = 4
-    [0,0,0,0,0,0,1,1,2,2,4,4,3,3]
-    n = 0, m = 3
-    l[0] = 0 og l[3] = 1
-    [1,1,0,0,0,2,2,4,4,3,3]
-    [1,1,0,2,2,0,0,4,4,3,3]
-    [1,1,0,0,2,2,0,0,0,0,4,4,3,3] If randoms are intern move just move on index
-
-    [1,1,0,2,2,3,3,0,4,4,0] Else move in pairs
-    */
 
     val randomIndexOne = Random.nextInt(currentSolution.size)
     val randomIndexTwo = Random.nextInt(currentSolution.size)
@@ -44,30 +31,49 @@ fun twoExchange(currentSolution: MutableList<Int>, world: World): MutableList<In
         currentSolution[nextIndexOfCallOne] = randomCallTwo
         currentSolution[randomIndexTwo] = randomCallOne
         currentSolution[nextIndexOfCallTwo] = randomCallOne
-    } else {
-        // TODO: Fix when one call is 0
-        val paddedSolution = mutableListOf<Int>()
-        var car = -1
+        return currentSolution
 
-        for (call in currentSolution) {
-            if (call != 0) {
-                paddedSolution.add(call)
-            } else {
-                paddedSolution.add(call)
-                paddedSolution.add(car)
-                car -= 1
-            }
+    } else {
+        val vehicles: HashMap<Int, MutableList<Int>> = hashMapOf()
+        val randomCall = max(randomCallOne, randomCallTwo)
+        val randomVehicle = world.vehicles.random().id
+
+        for (i in 0 until world.vehicles.size + 1) {
+            vehicles[i] = mutableListOf()
         }
 
+        var i = 0
+        for (c in currentSolution) {
+            if (c != 0) vehicles[i]?.add(c) else i++
+        }
+
+        for (v in vehicles.values) {
+            if (v.contains(randomCall)) {
+                v.removeIf { x -> x == randomCall }
+                break
+            }
+        }
+        if (vehicles[randomVehicle] != null && vehicles[randomVehicle]!!.isEmpty()) {
+            vehicles[randomVehicle]?.add(randomCall)
+            vehicles[randomVehicle]?.add(randomCall)
+        } else {
+            var n = vehicles[randomVehicle]?.size?.let { Random.nextInt(0, it) }
+            vehicles[randomVehicle]?.add(n!!, randomCall)
+            n = vehicles[randomVehicle]?.size?.let { Random.nextInt(0, it) }
+            vehicles[randomVehicle]?.add(n!!, randomCall)
+        }
+        val newSolution = mutableListOf<Int>()
+
+        for (v in vehicles.values) {
+            newSolution += v
+            newSolution.add(0)
+        }
+        newSolution.removeLast()
+
+
+        return newSolution
 
     }
-
-
-
-
-
-
-    return currentSolution
 }
 
 
