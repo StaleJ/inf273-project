@@ -2,6 +2,7 @@ import algorithms.localSearch
 import algorithms.simulatedAnnealing
 import classes.World
 import operators.oneInsert
+import operators.threeExchange
 import operators.twoExchange
 import utils.calculateCost
 import utils.parseInput
@@ -48,8 +49,10 @@ fun runInstance(
 
 fun main() {
     runInstance(::localSearch, ::oneInsert, "Local Search-1-insert")
-    runInstance(::simulatedAnnealing, ::oneInsert, "Simulated Annealing-1-insert")
     runInstance(::localSearch, ::twoExchange, "Local two-exchange")
+    runInstance(::localSearch, ::threeExchange, "Local Search three-exchange")
+    runInstance(::simulatedAnnealing, ::oneInsert, "Simulated Annealing-1-insert")
     runInstance(::simulatedAnnealing, ::twoExchange, "Simulated Annealing two-exchange")
+    runInstance(::simulatedAnnealing, ::threeExchange, "Simulated Annealing three-exchange")
 
 }
