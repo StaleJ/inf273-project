@@ -85,10 +85,3 @@ fun twoExchange(currentSolution: MutableList<Int>, world: World): MutableList<In
 
 
 }
-
-
-fun main() {
-    val world: World = parseInput("src/main/resources/Call_7_Vehicle_3.txt")
-    val initialSolution = createWorstCase(world)
-    println(twoExchange(initialSolution, world))
-}
