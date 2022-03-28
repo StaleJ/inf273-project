@@ -6,9 +6,13 @@ import kotlin.random.Random
 
 
 fun oneInsert(currentSolution: MutableList<Int>, world: World): MutableList<Int> {
+    val randomBoolean: Boolean = Random.nextDouble() < 0.05
     val vehicles: HashMap<Int, MutableList<Int>> = hashMapOf()
-    val randomCall = world.calls.random().index + 1
-    val randomVehicle = world.vehicles.random().id
+    val randomCall: Int = if (randomBoolean) {
+        world.calls.find { call -> call.size == world.calls.maxOf { maxCall -> maxCall.size } }!!.index + 1
+
+    } else world.calls.random().index + 1
+    val randomVehicle = canTakeCall(randomCall, world).random().id
 
     for (i in 0 until world.vehicles.size + 1) {
         vehicles[i] = mutableListOf()
