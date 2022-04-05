@@ -52,9 +52,9 @@ fun insertBest(currentSolution: MutableList<Int>, world: World): MutableList<Int
                 car.remove(randomCall)
                 car.remove(randomCall)
             } else {
-                if (id != vehicles.size) {
+                if (id != vehicles.size + 1) {
                     for (k in 0 until car.size - 1) {
-                        for (l in 1 until car.size) {
+                        for (l in k + 1 until car.size) {
                             car.add(k, randomCall)
                             car.add(l, randomCall)
                             val tempSolution = createSolution(vehicles)
