@@ -1,6 +1,7 @@
 package algorithms
 
 import classes.World
+import operators.greedy.insertBest
 import operators.oneInsert
 import operators.threeExchange
 import operators.twoExchange
@@ -17,10 +18,10 @@ fun modifiedSimulatedAnnealing(
     world: World
 ): MutableList<Int> {
     val OP1 = ::oneInsert
-    val OP2 = ::twoExchange
+    val OP2 = ::insertBest
     val OP3 = ::threeExchange
     val finalTemperature = 0.1
-    val P1 = 33.0
+    val P1 = 34.0
     val P2 = 33.0
     val P3 = 33.0
     var incumbent = initialSolution
@@ -34,7 +35,7 @@ fun modifiedSimulatedAnnealing(
     for (w in 0 until 100) {
         val nextOperator = randomSelection.next()
         val newSolution = nextOperator(incumbent, world)
-        val deltaE = calculateCost(newSolution, world) - calculateCost(initialSolution, world)
+        val deltaE = calculateCost(newSolution, world) - calculateCost(incumbent, world)
         if (feasibilityCheck(newSolution, world).isOk() && deltaE < 0) {
             incumbent = newSolution
             if (calculateCost(incumbent, world) < calculateCost(bestSolution, world)) {
