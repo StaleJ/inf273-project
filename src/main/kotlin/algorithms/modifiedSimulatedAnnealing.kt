@@ -2,6 +2,7 @@ package algorithms
 
 import classes.World
 import operators.greedy.insertBest
+import operators.greedy.optimizeVehicle
 import operators.oneInsert
 import operators.threeExchange
 import operators.twoExchange
@@ -19,7 +20,7 @@ fun modifiedSimulatedAnnealing(
 ): MutableList<Int> {
     val OP1 = ::oneInsert
     val OP2 = ::insertBest
-    val OP3 = ::threeExchange
+    val OP3 = ::optimizeVehicle
     val finalTemperature = 0.1
     val P1 = 34.0
     val P2 = 33.0
