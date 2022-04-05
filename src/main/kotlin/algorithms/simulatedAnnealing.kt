@@ -21,7 +21,7 @@ fun simulatedAnnealing(
     // Warm up
     for (w in 0 until 100) {
         val newSolution = operator(incumbent, world)
-        val deltaE = calculateCost(newSolution, world) - calculateCost(initialSolution, world)
+        val deltaE = calculateCost(newSolution, world) - calculateCost(incumbent, world)
         if (feasibilityCheck(newSolution, world).isOk() && deltaE < 0) {
             incumbent = newSolution
             if (calculateCost(incumbent, world) < calculateCost(bestSolution, world)) {
