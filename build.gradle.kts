@@ -17,7 +17,7 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:2.1.21")
     implementation("org.slf4j:slf4j-simple:1.7.36")
     implementation("org.postgresql:postgresql:42.3.3")
-    implementation("com.google.code.gson:gson:2.8.5")
+    implementation("com.google.code.gson:gson:2.9.0")
 }
 
 tasks.test {
