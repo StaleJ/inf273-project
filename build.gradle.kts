@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.10"
+    kotlin("jvm") version "1.6.20"
 }
 
-group = "me.marie"
+group = "me.stale"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -12,12 +12,12 @@ repositories {
 }
 
 dependencies {
-    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.2")
     testImplementation(kotlin("test"))
-    implementation("io.github.microutils:kotlin-logging-jvm:2.1.20")
-    implementation("org.slf4j:slf4j-simple:1.7.26")
-    implementation("org.postgresql:postgresql:42.3.1")
-    implementation("com.google.guava:guava:27.0-jre")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.1.21")
+    implementation("org.slf4j:slf4j-simple:1.7.36")
+    implementation("org.postgresql:postgresql:42.3.3")
+    implementation("com.google.code.gson:gson:2.8.5")
 }
 
 tasks.test {
