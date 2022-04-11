@@ -1,9 +1,8 @@
-import algorithms.localSearch
 import algorithms.modifiedSimulatedAnnealing
 import algorithms.simulatedAnnealing
 import classes.World
-import operators.greedy.insertBest
-import operators.greedy.optimizeVehicle
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import operators.oneInsert
 import utils.calculateCost
 import utils.parseInput
@@ -26,7 +25,8 @@ fun runInstance(
         var bestSolution = initialSolution
         var average: Long = 0
         var time: Long = 0
-        for (j in 0 until 10) {
+        val nIterations = 10
+        for (j in 0 until nIterations) {
             val incumbent: MutableList<Int>
             time += measureTimeMillis { incumbent = algorithm(initialSolution, operator, world) }
 
@@ -39,16 +39,22 @@ fun runInstance(
         }
         val bestCost = calculateCost(bestSolution, world)
         val improvement = 100 * (initialCost - bestCost) / initialCost
+
         println("              | Average objective | Best objective | Improvement (%) | Running time |")
-        println("$name |    ${average / 10}   |    $bestCost    |    ${improvement}%    |    ${time / 10}ms\n")
+        println("$name |    ${average / nIterations}   |    $bestCost    |    ${improvement}%    |    ${time / nIterations}ms\n")
         println(bestSolution)
         println()
     }
+
 
 }
 
 
 fun main() {
+    val gson = Gson()
+    val gsonPretty = GsonBuilder().setPrettyPrinting().create()
+    val solutionMap = mutableMapOf<String, Any>()
+
     //runInstance(::localSearch, ::optimizeVehicle, "Local Search-1-insert")
     //runInstance(::localSearch, ::twoExchange, "Local two-exchange")
     //runInstance(::localSearch, ::threeExchange, "Local Search three-exchange")
@@ -56,5 +62,6 @@ fun main() {
     //runInstance(::simulatedAnnealing, ::twoExchange, "Simulated Annealing two-exchange")
     //runInstance(::simulatedAnnealing, ::threeExchange, "Simulated Annealing three-exchange")
     runInstance(::modifiedSimulatedAnnealing, ::oneInsert, "SA-new operators (equal weights)")
-
+    //val jsonMap = gsonPretty.toJson(solutionMap)
+    //println(jsonMap)
 }

@@ -12,7 +12,7 @@ fun optimizeVehicle(currentSolution: MutableList<Int>, world: World): MutableLis
     var bestSolution = currentSolution
 
     // eligible vehicles are with more than 2 calls in them.
-    for ((v, l) in vehicles) if (v != world.vehicles.size && l.size >= 4 && l.size <= 8) eligibleVehicles.add(v)
+    for ((v, l) in vehicles) if (v != vehicles.size + 1 && l.size >= 4 && l.size <= 8) eligibleVehicles.add(v)
     if (eligibleVehicles.isNotEmpty()) {
         val randomVehicle = eligibleVehicles.random()
         val permuteRandomVehicle = vehicles[randomVehicle]?.permutations(vehicles[randomVehicle]?.size)
