@@ -18,29 +18,7 @@ fun getConnection(): Connection {
 
 }
 
-fun main() {
-    val results = mutableListOf<Result>()
 
-
-    val connection = getConnection()
-
-
-    val sql = "SELECT * FROM call_7_vehicle_3"
-    val query = connection.prepareStatement(sql)
-
-    val result = query.executeQuery()
-
-    while (result.next()) {
-        val name = result.getString("name")
-        val average = result.getInt("average")
-        val best = result.getInt("best")
-        val improvement = result.getInt("improvement")
-        val time = result.getDouble("time")
-        val solution = result.getArray("solution")
-        results.add(Result(name, average, best, improvement, time, solution as PgArray))
-    }
-    insertResultToDB(7, 3, results[0])
-}
 
 fun insertResultToDB(call: Int, vehicle: Int, result: Result) {
     val connection = getConnection()
