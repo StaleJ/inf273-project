@@ -1,4 +1,5 @@
 import algorithms.localSearch
+import algorithms.modifiedSimulatedAnnealing
 import classes.Result
 import classes.World
 import com.google.gson.Gson
@@ -70,10 +71,11 @@ fun main() {
     //val simulatedAnnealingTwoExchange =runInstance(::simulatedAnnealing, ::twoExchange, "Simulated Annealing two-exchange")
     //val simulatedAnnealingThreeExchange = runInstance(::simulatedAnnealing, ::threeExchange, "Simulated Annealing three-exchange")
     //runInstance(::modifiedSimulatedAnnealing, ::oneInsert, "SA-new operators (equal weights)")
-    solutionMap["Local Search-1-insert"] = runInstance(::localSearch, ::oneInsert, "Local Search-1-insert")
+    //solutionMap["Local Search-1-insert"] = runInstance(::localSearch, ::oneInsert, "Local Search-1-insert")
     //solutionMap["Local two-exchange"] = runInstance(::localSearch, ::twoExchange, "Local two-exchange")
     //solutionMap["Local Search three-exchange"] =
     //    runInstance(::localSearch, ::threeExchange, "Local Search three-exchange")
+    runInstance(::modifiedSimulatedAnnealing, ::oneInsert, "mod sim")
 
     val jsonMap = gson.toJson(solutionMap)
     resultFile.writeText(jsonMap)
