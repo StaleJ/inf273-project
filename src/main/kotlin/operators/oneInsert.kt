@@ -2,47 +2,26 @@ package operators
 
 import classes.Vehicle
 import classes.World
+import operators.kOperator.createVehicleMap
+import operators.kOperator.insertCallInVehicle
+import operators.kOperator.removeCallFromVehicle
 import kotlin.random.Random
 
 
 fun oneInsert(currentSolution: MutableList<Int>, world: World): MutableList<Int> {
     val randomBoolean: Boolean = Random.nextDouble() < 0.05
-    val vehicles: HashMap<Int, MutableList<Int>> = hashMapOf()
+    val vehicles: HashMap<Int, MutableList<Int>> = createVehicleMap(currentSolution, world)
     val randomCall: Int = if (randomBoolean) {
         world.calls.find { call -> call.size == world.calls.maxOf { maxCall -> maxCall.size } }!!.index + 1
 
     } else world.calls.random().index + 1
     val randomVehicle = canTakeCall(randomCall, world).random().id
 
-    for (i in 0 until world.vehicles.size + 1) {
-        vehicles[i] = mutableListOf()
-    }
-
-    var i = 0
-    for (c in currentSolution) {
-        if (c == 0) {
-            i++
-        } else {
-            vehicles[i]?.add(c)
-        }
-    }
 
 
-    for (v in vehicles.values) {
-        if (v.contains(randomCall)) {
-            v.removeIf { x -> x == randomCall }
-            break
-        }
-    }
-    if (vehicles[randomVehicle] != null && vehicles[randomVehicle]!!.isEmpty()) {
-        vehicles[randomVehicle]?.add(randomCall)
-        vehicles[randomVehicle]?.add(randomCall)
-    } else {
-        var n = vehicles[randomVehicle]?.size?.let { Random.nextInt(0, it) }
-        vehicles[randomVehicle]?.add(n!!, randomCall)
-        n = vehicles[randomVehicle]?.size?.let { Random.nextInt(0, it) }
-        vehicles[randomVehicle]?.add(n!!, randomCall)
-    }
+    removeCallFromVehicle(randomCall, vehicles)
+    insertCallInVehicle(randomCall, randomVehicle, vehicles)
+
 
 
     val newSolution = mutableListOf<Int>()

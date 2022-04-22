@@ -2,6 +2,7 @@ package operators
 
 import classes.World
 import createWorstCase
+import operators.kOperator.insertCallInVehicle
 import utils.parseInput
 import kotlin.math.max
 import kotlin.random.Random
@@ -60,15 +61,8 @@ fun twoExchange(currentSolution: MutableList<Int>, world: World): MutableList<In
                     break
                 }
             }
-            if (vehicles[randomVehicle] != null && vehicles[randomVehicle]!!.isEmpty()) {
-                vehicles[randomVehicle]?.add(randomCall)
-                vehicles[randomVehicle]?.add(randomCall)
-            } else {
-                var n = vehicles[randomVehicle]?.size?.let { Random.nextInt(0, it) }
-                vehicles[randomVehicle]?.add(n!!, randomCall)
-                n = vehicles[randomVehicle]?.size?.let { Random.nextInt(0, it) }
-                vehicles[randomVehicle]?.add(n!!, randomCall)
-            }
+            insertCallInVehicle(randomCall, randomVehicle, vehicles)
+
             val newSolution = mutableListOf<Int>()
 
             for (v in vehicles.values) {
