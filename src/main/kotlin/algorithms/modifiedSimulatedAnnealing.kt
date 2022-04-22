@@ -22,9 +22,9 @@ fun modifiedSimulatedAnnealing(
     val OP2 = ::insertBest
     val OP3 = ::optimizeVehicle
     val finalTemperature = 0.1
-    val P1 = 35.0
-    val P2 = 60.0
-    val P3 = 5.0
+    val P1 = 33.0
+    val P2 = 33.0
+    val P3 = 33.0
     var incumbent = initialSolution
     var bestSolution = initialSolution
     val deltaW = mutableListOf<Long>()
