@@ -1,3 +1,5 @@
+import algorithms.Algorithm
+import algorithms.LocalSearch
 import algorithms.modifiedSimulatedAnnealing
 import classes.Result
 import classes.World
@@ -13,7 +15,7 @@ import kotlin.system.measureTimeMillis
 class RunInstance {
 
     fun runInstanceOneOperator(
-        algorithm: (s: MutableList<Int>, o: Operator, w: World) -> MutableList<Int>,
+        algorithm: Algorithm,
         operator: Operator,
         name: String,
     ): MutableList<Result> {
@@ -32,7 +34,7 @@ class RunInstance {
             val nIterations = 10
             for (j in 0 until nIterations) {
                 val incumbent: MutableList<Int>
-                time += measureTimeMillis { incumbent = algorithm(initialSolution, operator, world) }
+                time += measureTimeMillis { incumbent = algorithm.runWithOneOperator(initialSolution, operator, world) }
 
                 val incumbentCost = calculateCost(incumbent, world)
                 average += incumbentCost
@@ -86,7 +88,7 @@ fun main() {
     //solutionMap["Local Search three-exchange"] =
     //    runInstance(::localSearch, ::threeExchange, "Local Search three-exchange")
 
-    RunInstance().runInstanceOneOperator(::modifiedSimulatedAnnealing, OneInsert(), "Mod sim")
+    RunInstance().runInstanceOneOperator(LocalSearch(), OneInsert(), "Mod sim")
     //runInstance(::localSearch, ::kInsert, "Local Search kInsert")
 
     val jsonMap = gson.toJson(solutionMap)
