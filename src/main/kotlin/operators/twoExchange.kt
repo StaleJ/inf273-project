@@ -1,9 +1,6 @@
 package operators
 
 import classes.World
-import createWorstCase
-import operators.kOperator.insertCallInVehicle
-import utils.parseInput
 import kotlin.math.max
 import kotlin.random.Random
 
@@ -17,23 +14,17 @@ fun twoExchange(currentSolution: MutableList<Int>, world: World): MutableList<In
 
     when {
         randomCallOne == 0 && randomCallTwo == 0 -> { // if both are vehicles then do one insert
-            return oneInsert(currentSolution, world)
+            return OneInsert().run(currentSolution, world)
         }
         randomCallOne != 0 && randomCallTwo != 0 -> { // if both are calls just swap calls on index
-            val nextIndexOfCallOne =
-                when {
-                    currentSolution.indexOf(randomCallOne) != randomIndexOne -> currentSolution.indexOf(randomCallOne)
-                    else -> currentSolution.lastIndexOf(
-                        randomCallOne
-                    )
-                }
-            val nextIndexOfCallTwo =
-                when {
-                    currentSolution.indexOf(randomCallTwo) != randomIndexTwo -> currentSolution.indexOf(randomCallTwo)
-                    else -> currentSolution.lastIndexOf(
-                        randomCallTwo
-                    )
-                }
+            val nextIndexOfCallOne = when {
+                currentSolution.indexOf(randomCallOne) != randomIndexOne -> currentSolution.indexOf(randomCallOne)
+                else -> currentSolution.lastIndexOf(randomCallOne)
+            }
+            val nextIndexOfCallTwo = when {
+                currentSolution.indexOf(randomCallTwo) != randomIndexTwo -> currentSolution.indexOf(randomCallTwo)
+                else -> currentSolution.lastIndexOf(randomCallTwo)
+            }
             currentSolution[randomIndexOne] = randomCallTwo
             currentSolution[nextIndexOfCallOne] = randomCallTwo
             currentSolution[randomIndexTwo] = randomCallOne
@@ -61,7 +52,7 @@ fun twoExchange(currentSolution: MutableList<Int>, world: World): MutableList<In
                     break
                 }
             }
-            insertCallInVehicle(randomCall, randomVehicle, vehicles)
+            //insertCallInVehicle(randomCall, randomVehicle, vehicles)
 
             val newSolution = mutableListOf<Int>()
 

@@ -2,7 +2,6 @@ package operators.kOperator
 
 import classes.World
 import operators.Operator
-import operators.canTakeCall
 import kotlin.random.Random
 
 

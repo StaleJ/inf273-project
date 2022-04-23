@@ -1,9 +1,9 @@
-import algorithms.localSearch
 import algorithms.modifiedSimulatedAnnealing
 import classes.Result
 import classes.World
 import com.google.gson.Gson
-import operators.oneInsert
+import operators.OneInsert
+import operators.Operator
 import utils.calculateCost
 import utils.parseInput
 import java.io.File
@@ -11,9 +11,9 @@ import kotlin.system.measureTimeMillis
 
 
 fun runInstance(
-    algorithm: (s: MutableList<Int>, o: (s: MutableList<Int>, w: World) -> MutableList<Int>, w: World) -> MutableList<Int>,
-    operator: (s: MutableList<Int>, w: World) -> MutableList<Int>,
-    name: String
+    algorithm: (s: MutableList<Int>, o: Operator, w: World) -> MutableList<Int>,
+    operator: Operator,
+    name: String,
 ): MutableList<Result> {
     val calls = listOf(7, 18, 35, 80, 130, 300)
     val vehicles = listOf(3, 5, 7, 20, 40, 90)
@@ -42,15 +42,12 @@ fun runInstance(
         val bestCost = calculateCost(bestSolution, world)
         val improvement = 100 * (initialCost - bestCost) / initialCost
 
-        val result =
-            Result(
-                "CALL $v AND VEHICLE ${vehicles[i]}",
-                average / nIterations,
-                bestCost,
-                improvement,
-                time / nIterations,
-                bestSolution
-            )
+        val result = Result("CALL $v AND VEHICLE ${vehicles[i]}",
+            average / nIterations,
+            bestCost,
+            improvement,
+            time / nIterations,
+            bestSolution)
 
         listResult.add(result)
         println(result.toString())
@@ -75,7 +72,8 @@ fun main() {
     //solutionMap["Local two-exchange"] = runInstance(::localSearch, ::twoExchange, "Local two-exchange")
     //solutionMap["Local Search three-exchange"] =
     //    runInstance(::localSearch, ::threeExchange, "Local Search three-exchange")
-    runInstance(::modifiedSimulatedAnnealing, ::oneInsert, "mod sim")
+    runInstance(::modifiedSimulatedAnnealing, OneInsert(), "mod sim")
+    //runInstance(::localSearch, ::kInsert, "Local Search kInsert")
 
     val jsonMap = gson.toJson(solutionMap)
     resultFile.writeText(jsonMap)

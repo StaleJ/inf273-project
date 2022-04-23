@@ -1,12 +1,19 @@
 package algorithms
 
 import classes.World
+import operators.Operator
+import operators.greedy.InsertBest
+import operators.kOperator.InsertK
+import java.util.OptionalDouble
 
-fun GAMF(
+fun ALNS(
     initialSolution: MutableList<Int>,
-    op: (s: MutableList<Int>, w: World) -> MutableList<Int>,
     world: World
 ): MutableList<Int> {
+    val op1: Pair<Operator, Double> = Pair(InsertK(), 33.0)
+    val op2: Pair<Operator, Double> = Pair(InsertBest(), 33.0)
+
+
     var bestSolution = initialSolution
     var i = 0  // iterations since best solution found
 

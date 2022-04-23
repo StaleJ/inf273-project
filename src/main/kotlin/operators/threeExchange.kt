@@ -25,7 +25,7 @@ fun threeExchange(currentSolution: MutableList<Int>, world: World): MutableList<
 
     when {
         randomCallOne == 0 && randomCallTwo == 0 && randomCallThree == 0 -> {
-            return oneInsert(currentSolution, world)
+            return OneInsert().run(currentSolution, world)
         }
         randomCallOne != 0 && randomCallTwo != 0 && randomCallThree != 0 -> {
             val nextIndexOfCallOne = when {
@@ -49,9 +49,7 @@ fun threeExchange(currentSolution: MutableList<Int>, world: World): MutableList<
             return currentSolution
         }
         else -> {
-            var newSolution = oneInsert(currentSolution, world)
-            newSolution = oneInsert(newSolution, world)
-            return newSolution
+            return OneInsert().run(currentSolution, world)
 
         }
 

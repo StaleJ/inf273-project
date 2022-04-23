@@ -1,11 +1,10 @@
 package algorithms
 
 import classes.World
-import operators.greedy.insertBest
-import operators.greedy.optimizeVehicle
-import operators.oneInsert
-import operators.threeExchange
-import operators.twoExchange
+import operators.Operator
+import operators.greedy.InsertBest
+import operators.greedy.OptimizeVehicle
+import operators.kOperator.InsertK
 import utils.RandomCollection
 import utils.calculateCost
 import utils.feasibilityCheck
@@ -15,27 +14,26 @@ import kotlin.random.Random
 
 fun modifiedSimulatedAnnealing(
     initialSolution: MutableList<Int>,
-    operator: (s: MutableList<Int>, w: World) -> MutableList<Int>, // Not in use
-    world: World
+    operator: Operator, // Not in use
+    world: World,
 ): MutableList<Int> {
-    val OP1 = ::oneInsert
-    val OP2 = ::insertBest
-    val OP3 = ::optimizeVehicle
+    val OP1 = InsertK()
+    val OP2 = InsertBest()
+    val OP3 = OptimizeVehicle()
     val finalTemperature = 0.1
-    val P1 = 33.0
-    val P2 = 33.0
-    val P3 = 33.0
+    val P1 = 25.0
+    val P2 = 70.0
+    val P3 = 5.0
     var incumbent = initialSolution
     var bestSolution = initialSolution
     val deltaW = mutableListOf<Long>()
 
     val randomSelection =
-        RandomCollection<(s: MutableList<Int>, w: World) -> MutableList<Int>>().add(P1, OP1).add(P2, OP2).add(P3, OP3)
+        RandomCollection<Operator>().add(P1, OP1).add(P2, OP2).add(P3, OP3)
 
     // Warm up
     for (w in 0 until 100) {
-        val nextOperator = randomSelection.next()
-        val newSolution = nextOperator(incumbent, world)
+        val newSolution = OP1.run(incumbent, world)
         val deltaE = calculateCost(newSolution, world) - calculateCost(incumbent, world)
         if (feasibilityCheck(newSolution, world).isOk() && deltaE < 0) {
             incumbent = newSolution
@@ -55,7 +53,7 @@ fun modifiedSimulatedAnnealing(
     var T = t0
     for (i in 0 until 9900) {
         val nextOperator = randomSelection.next()
-        val newSolution = nextOperator(incumbent, world)
+        val newSolution = nextOperator.run(incumbent, world)
         val deltaE = calculateCost(newSolution, world) - calculateCost(incumbent, world)
         if (feasibilityCheck(newSolution, world).isOk() && deltaE < 0) {
             incumbent = newSolution

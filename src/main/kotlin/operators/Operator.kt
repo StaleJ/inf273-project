@@ -1,5 +1,6 @@
 package operators
 
+import classes.Vehicle
 import classes.World
 import kotlin.random.Random
 
@@ -75,6 +76,14 @@ interface Operator {
         solution.forEach { if (it == 0) i++ else vehiclesMap[i]?.add(it) }
 
         return vehiclesMap
+    }
+
+    fun canTakeCall(call: Int, world: World): List<Vehicle> {
+        val validVehicles: MutableList<Vehicle> = emptyList<Vehicle>().toMutableList()
+        for (vehicle in world.vehicles) {
+            if (call - 1 in vehicle.validCalls) validVehicles.add(vehicle)
+        }
+        return validVehicles
     }
 }
 

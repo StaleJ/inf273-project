@@ -3,12 +3,11 @@ package operators.greedy
 import classes.Vehicle
 import classes.World
 import operators.Operator
-import operators.canTakeCall
 import utils.calculateCost
 import utils.feasibilityCheck
 
 
-class InsertBest: Operator {
+class InsertBest : Operator {
     override fun run(solution: MutableList<Int>, world: World): MutableList<Int> {
         val vehicles: HashMap<Int, MutableList<Int>> = createVehicleMap(solution, world)
         val randomCall: Int = world.calls.random().index + 1
@@ -33,7 +32,8 @@ class InsertBest: Operator {
                     car.add(randomCall)
                     car.add(randomCall)
                     val tempSolution = createSolution(vehicles)
-                    if (feasibilityCheck(tempSolution, world).isOk() && calculateCost(tempSolution, world) < calculateCost(
+                    if (feasibilityCheck(tempSolution, world).isOk() && calculateCost(tempSolution,
+                            world) < calculateCost(
                             bestSolution,
                             world
                         )
