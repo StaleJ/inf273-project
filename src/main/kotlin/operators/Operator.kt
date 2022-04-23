@@ -53,6 +53,19 @@ interface Operator {
         }
         return vehicles
     }
+
+    fun createSolution(vehiclesMap: HashMap<Int, MutableList<Int>>): MutableList<Int> {
+        val newSolution = mutableListOf<Int>()
+
+        for (v in vehiclesMap.values) {
+            newSolution += v
+            newSolution.add(0)
+        }
+        newSolution.removeLast()
+
+
+        return newSolution
+    }
 }
 
 
