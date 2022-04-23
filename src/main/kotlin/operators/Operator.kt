@@ -66,6 +66,16 @@ interface Operator {
 
         return newSolution
     }
+
+    fun solutionToVehicles(solution: MutableList<Int>, numberOfVehicles: Int): HashMap<Int, MutableList<Int>> {
+        val vehiclesMap: HashMap<Int, MutableList<Int>> = hashMapOf()
+        var i = 0
+
+        (0..numberOfVehicles).forEach { vehiclesMap[it] = mutableListOf() }
+        solution.forEach { if (it == 0) i++ else vehiclesMap[i]?.add(it) }
+
+        return vehiclesMap
+    }
 }
 
 
