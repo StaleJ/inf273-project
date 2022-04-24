@@ -14,6 +14,11 @@ class RandomCollection<E> @JvmOverloads constructor(private val random: Random =
         return this
     }
 
+    fun update(weight: Double, result: E): RandomCollection<E> {
+        if (weight <= 0) return this
+        TODO("Implement")
+    }
+
     operator fun next(): E {
         val value = random.nextDouble() * total
         return map.higherEntry(value).value
