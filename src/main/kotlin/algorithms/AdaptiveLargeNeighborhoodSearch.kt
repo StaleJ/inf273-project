@@ -30,7 +30,7 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
             // Escape algorithm
             if (i > 100) {
                 for (e in 0 until 20) {
-                    currentSolution = InsertK().run(incumbentSolution, world)
+                    currentSolution = InsertK().run(currentSolution, world)
                 }
                 if (calculateCost(currentSolution, world) < calculateCost(bestSolution, world)) {
                     bestSolution = currentSolution
