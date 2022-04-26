@@ -1,7 +1,5 @@
 package utils
 
-import kotlin.jvm.JvmOverloads
-import utils.RandomCollection
 import java.util.*
 
 class RandomCollection<E> @JvmOverloads constructor(private val random: Random = Random()) {
@@ -13,11 +11,7 @@ class RandomCollection<E> @JvmOverloads constructor(private val random: Random =
         map[total] = result
         return this
     }
-
-    fun update(weight: Double, result: E): RandomCollection<E> {
-        if (weight <= 0) return this
-        TODO("Implement")
-    }
+    
 
     operator fun next(): E {
         val value = random.nextDouble() * total
