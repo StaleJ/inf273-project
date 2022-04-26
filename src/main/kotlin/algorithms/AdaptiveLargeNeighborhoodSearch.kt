@@ -5,6 +5,8 @@ import createWorstCase
 import operators.OneInsert
 import operators.Operator
 import operators.kOperator.InsertK
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import utils.RandomCollection
 import utils.calculateCost
 import utils.feasibilityCheck
@@ -27,7 +29,7 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
         var incumbentSolution: MutableList<Int> = initialSolution
         val operatorScoreMap: HashMap<Operator, Double> = hashMapOf()
         val deltaW: MutableList<Long> = mutableListOf()
-        val finaTemperature = 0.1
+        val finaTemperature = 0.2
         var sinceLastBestFoundSolution: Int = 0
 
         // Add equal weights to the operators
@@ -69,7 +71,7 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
         for (i in 1..9900) {
 
             // Escape algorithm
-            if (sinceLastBestFoundSolution > 100) {
+            if (sinceLastBestFoundSolution > 70) {
                 for (e in 0 until 20) {
                     val tempSolution = InsertK().run(currentSolution, world)
                     if (feasibilityCheck(tempSolution, world).isOk())
@@ -90,10 +92,10 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
 
             if (feasibilityCheck(incumbentSolution, world).isOk() && deltaE < 0) {
                 currentSolution = incumbentSolution
-                operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]?.plus(1.0)!!
+                operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]?.plus(2.0)!!
                 if (calculateCost(currentSolution, world) < calculateCost(bestSolution, world)) {
                     bestSolution = currentSolution
-                    operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]?.plus(2.0)!!
+                    operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]?.plus(8.0)!!
                     sinceLastBestFoundSolution = 0
                 }
             } else if (feasibilityCheck(incumbentSolution,
@@ -115,7 +117,6 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
 
         sinceLastBestFoundSolution++
         }
-
         return bestSolution
 
     }
