@@ -11,6 +11,7 @@ import operators.kOperator.InsertK
 import utils.calculateCost
 import utils.parseInput
 import java.io.File
+import java.util.concurrent.TimeUnit
 import kotlin.system.measureTimeMillis
 
 
@@ -81,9 +82,10 @@ class RunInstance {
             val nIterations = 10
             for (j in 0 until nIterations) {
                 val incumbent: MutableList<Int>
-                time += measureTimeMillis { incumbent = algorithm.runSetOperator(initialSolution, operatorList, world) }
-
+                val instance = measureTimeMillis { incumbent = algorithm.runSetOperator(initialSolution, operatorList, world) }
+                time += instance
                 val incumbentCost = calculateCost(incumbent, world)
+                println("run ${j + 1} time: ${TimeUnit.MILLISECONDS.toSeconds(instance)}s score: $incumbentCost")
                 average += incumbentCost
                 if (incumbentCost < calculateCost(bestSolution, world)) {
                     bestSolution = incumbent
@@ -132,7 +134,7 @@ fun main() {
     //solutionMap["Local Search three-exchange"] =
     //    runInstance(::localSearch, ::threeExchange, "Local Search three-exchange")
     val operators: List<Operator> = listOf(InsertBest(), OptimizeVehicle(), InsertK(), OneInsert())
-    RunInstance().runInstanceOperatorSet(AdaptiveLargeNeighborhoodSearch(), operators, "ALNS")
+    solutionMap["ALNS"] = RunInstance().runInstanceOperatorSet(AdaptiveLargeNeighborhoodSearch(), operators, "ALNS")
     //runInstance(::localSearch, ::kInsert, "Local Search kInsert")
 
     val jsonMap = gson.toJson(solutionMap)
