@@ -5,6 +5,8 @@ import classes.World
 import com.google.gson.Gson
 import operators.OneInsert
 import operators.Operator
+import operators.ThreeExchange
+import operators.greedy.GreedyDummy
 import operators.greedy.InsertBest
 import operators.greedy.OptimizeVehicle
 import operators.kOperator.InsertK
@@ -82,10 +84,11 @@ class RunInstance {
             val nIterations = 10
             for (j in 0 until nIterations) {
                 val incumbent: MutableList<Int>
-                val instance = measureTimeMillis { incumbent = algorithm.runSetOperator(initialSolution, operatorList, world) }
+                val instance =
+                    measureTimeMillis { incumbent = algorithm.runSetOperator(initialSolution, operatorList, world) }
                 time += instance
                 val incumbentCost = calculateCost(incumbent, world)
-                println("run ${j + 1} time: ${TimeUnit.MILLISECONDS.toSeconds(instance)}s score: $incumbentCost")
+                println("run ${j + 1} time: ${TimeUnit.MILLISECONDS.toSeconds(instance)}s score: $incumbentCost solution = $incumbent")
                 average += incumbentCost
                 if (incumbentCost < calculateCost(bestSolution, world)) {
                     bestSolution = incumbent
@@ -125,17 +128,10 @@ fun main() {
     val solutionMap = mutableMapOf<String, Any>()
     val resultFile = File("results/result.json")
 
-    //val simulatedAnnealingOneInsert = runInstance(::simulatedAnnealing, ::oneInsert, "Simulated Annealing-1-insert")
-    //val simulatedAnnealingTwoExchange =runInstance(::simulatedAnnealing, ::twoExchange, "Simulated Annealing two-exchange")
-    //val simulatedAnnealingThreeExchange = runInstance(::simulatedAnnealing, ::threeExchange, "Simulated Annealing three-exchange")
-    //runInstance(::modifiedSimulatedAnnealing, ::oneInsert, "SA-new operators (equal weights)")
-    //solutionMap["Local Search-1-insert"] = runInstance(::localSearch, ::oneInsert, "Local Search-1-insert")
-    //solutionMap["Local two-exchange"] = runInstance(::localSearch, ::twoExchange, "Local two-exchange")
-    //solutionMap["Local Search three-exchange"] =
-    //    runInstance(::localSearch, ::threeExchange, "Local Search three-exchange")
-    val operators: List<Operator> = listOf(InsertBest(), OptimizeVehicle(), InsertK(), OneInsert())
+
+    val operators: List<Operator> =
+        listOf(InsertBest(), OptimizeVehicle(), InsertK(), OneInsert(), GreedyDummy())
     solutionMap["ALNS"] = RunInstance().runInstanceOperatorSet(AdaptiveLargeNeighborhoodSearch(), operators, "ALNS")
-    //runInstance(::localSearch, ::kInsert, "Local Search kInsert")
 
     val jsonMap = gson.toJson(solutionMap)
     resultFile.writeText(jsonMap)
