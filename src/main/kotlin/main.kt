@@ -3,9 +3,9 @@ import algorithms.Algorithm
 import classes.Result
 import classes.World
 import com.google.gson.Gson
+import operators.Escape.MoveDummy
 import operators.OneInsert
 import operators.Operator
-import operators.ThreeExchange
 import operators.greedy.GreedyDummy
 import operators.greedy.InsertBest
 import operators.greedy.OptimizeVehicle
@@ -74,7 +74,8 @@ class RunInstance {
         val listResult = mutableListOf<Result>()
         println(name)
         for ((i, v) in calls.withIndex()) {
-
+            val bestMap: HashMap<Int, Long> =
+                hashMapOf(7 to 1134176, 18 to 2374420, 35 to 4940607, 80 to 10602358, 130 to 16812178, 300 to 36864922)
             val world: World = parseInput("src/main/resources/Call_${v}_Vehicle_${vehicles[i]}.txt")
             val initialSolution = createWorstCase(world)
             val initialCost = calculateCost(initialSolution, world)
@@ -88,7 +89,7 @@ class RunInstance {
                     measureTimeMillis { incumbent = algorithm.runSetOperator(initialSolution, operatorList, world) }
                 time += instance
                 val incumbentCost = calculateCost(incumbent, world)
-                println("run ${j + 1} time: ${TimeUnit.MILLISECONDS.toSeconds(instance)}s score: $incumbentCost solution = $incumbent")
+                println("run ${j + 1} time: ${TimeUnit.MILLISECONDS.toSeconds(instance)}s score: $incumbentCost from best found = ${incumbentCost - bestMap[v]!!}")
                 average += incumbentCost
                 if (incumbentCost < calculateCost(bestSolution, world)) {
                     bestSolution = incumbent
@@ -130,7 +131,7 @@ fun main() {
 
 
     val operators: List<Operator> =
-        listOf(InsertBest(), OptimizeVehicle(), InsertK(), OneInsert(), GreedyDummy())
+        listOf(InsertBest(), OptimizeVehicle(), InsertK(), OneInsert())
     solutionMap["ALNS"] = RunInstance().runInstanceOperatorSet(AdaptiveLargeNeighborhoodSearch(), operators, "ALNS")
 
     val jsonMap = gson.toJson(solutionMap)

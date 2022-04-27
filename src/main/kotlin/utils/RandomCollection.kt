@@ -11,7 +11,7 @@ class RandomCollection<E> @JvmOverloads constructor(private val random: Random =
         map[total] = result
         return this
     }
-    
+
 
     operator fun next(): E {
         val value = random.nextDouble() * total
