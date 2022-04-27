@@ -75,7 +75,7 @@ class RunInstance {
         println(name)
         for ((i, v) in calls.withIndex()) {
             val bestMap: HashMap<Int, Long> =
-                hashMapOf(7 to 1134176, 18 to 2374420, 35 to 4940607, 80 to 10602358, 130 to 16812178, 300 to 36864922)
+                hashMapOf(7 to 1134176, 18 to 2922974, 35 to 8947883, 80 to 15994246, 130 to 21467471, 300 to 44455891)
             val world: World = parseInput("src/main/resources/Call_${v}_Vehicle_${vehicles[i]}.txt")
             val initialSolution = createWorstCase(world)
             val initialCost = calculateCost(initialSolution, world)
@@ -131,7 +131,7 @@ fun main() {
 
 
     val operators: List<Operator> =
-        listOf(InsertBest(), OptimizeVehicle(), InsertK(), OneInsert())
+        listOf(InsertBest(), OptimizeVehicle(), InsertK(), OneInsert(), MoveDummy(), GreedyDummy())
     solutionMap["ALNS"] = RunInstance().runInstanceOperatorSet(AdaptiveLargeNeighborhoodSearch(), operators, "ALNS")
 
     val jsonMap = gson.toJson(solutionMap)

@@ -5,8 +5,6 @@ import createWorstCase
 import operators.Escape.MoveDummy
 import operators.OneInsert
 import operators.Operator
-import operators.greedy.InsertBest
-import operators.greedy.OptimizeVehicle
 import operators.kOperator.InsertK
 import utils.RandomCollection
 import utils.calculateCost
@@ -31,6 +29,7 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
         val historyLength: Int = world.calls.size
         val historyMap: HashMap<Int, Long> = hashMapOf()
         var sinceLastBestFoundSolution = 0
+        val prevSolutions: HashSet<Long> = hashSetOf()
         var I = 0
         var idleI = 0
         (0 until historyLength).forEach { historyMap[it] = currentCost }
@@ -41,40 +40,46 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
         }
 
 
-        for (i in 1..10000) {
+        for (i in 1..20000) {
 
 
             // Escape algorithm
-            if (sinceLastBestFoundSolution > 74 ) {
-                for (e in 0 until 20) {
+            if (sinceLastBestFoundSolution > 300) {
+                for (e in 0 until 50) {
                     val tempSolution = InsertK().run(currentSolution, world)
                     if (feasibilityCheck(tempSolution, world).isOk())
                         currentSolution = tempSolution
+
+                    if (feasibilityCheck(currentSolution, world).isOk() && calculateCost(currentSolution,
+                            world) < calculateCost(bestSolution, world)
+                    ) {
+                        bestSolution = currentSolution
+
+                    }
                 }
-                if (feasibilityCheck(currentSolution, world).isOk() && calculateCost(currentSolution,
-                        world) < calculateCost(bestSolution, world)
-                ) {
-                    bestSolution = currentSolution
-                    sinceLastBestFoundSolution = 0
-                }
+                sinceLastBestFoundSolution = 0
 
             }
             val nextOperator: Operator = randomSelection.next()
             incumbentSolution = nextOperator.run(currentSolution, world)
             val incumbentCost = calculateCost(incumbentSolution, world)
-            if (feasibilityCheck(incumbentSolution, world).isOk()) {
 
+            if (feasibilityCheck(incumbentSolution, world).isOk()) {
+                if (prevSolutions.add(incumbentCost)) {
+                    operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]!! + 5
+                }
                 // Calculate the virtual beginning v:= I mod Lh
                 val v: Int = I % historyLength
                 if (incumbentCost < historyMap[v]!! || incumbentCost < currentCost) {
                     currentSolution = incumbentSolution
                     currentCost = incumbentCost
-                    operatorScoreMap[nextOperator]?.plus(3)
+                    operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]!! + 10
 
                     if (currentCost < bestCost) {
                         bestCost = currentCost
                         bestSolution = currentSolution
-                        operatorScoreMap[nextOperator]?.plus(10)
+                        operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]!! + 15
+                        sinceLastBestFoundSolution = 0
 
                     }
                 }

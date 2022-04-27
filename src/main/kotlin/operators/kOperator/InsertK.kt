@@ -29,6 +29,8 @@ class InsertK : Operator {
             insertCallInVehicle(call, vehicle, vehicles)
         }
 
+
+
         for (v in vehicles.values) {
             newSolution += v
             newSolution.add(0)
