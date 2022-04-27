@@ -2,7 +2,6 @@ package algorithms
 
 import classes.World
 import createWorstCase
-import operators.Escape.MoveDummy
 import operators.OneInsert
 import operators.Operator
 import operators.kOperator.InsertK
@@ -10,6 +9,9 @@ import utils.RandomCollection
 import utils.calculateCost
 import utils.feasibilityCheck
 import utils.parseInput
+import kotlin.math.ln
+import kotlin.math.pow
+import kotlin.random.Random
 
 
 class AdaptiveLargeNeighborhoodSearch : Algorithm {
@@ -20,74 +22,87 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
         world: World,
     ): MutableList<Int> {
         var bestSolution: MutableList<Int> = initialSolution
-        var bestCost: Long = calculateCost(bestSolution, world)
         var randomSelection: RandomCollection<Operator> = RandomCollection()
         var currentSolution: MutableList<Int> = initialSolution
-        var currentCost: Long = calculateCost(initialSolution, world)
-        var incumbentSolution: MutableList<Int>
+        var incumbentSolution: MutableList<Int> = initialSolution
         val operatorScoreMap: HashMap<Operator, Double> = hashMapOf()
-        val historyLength: Int = world.calls.size
-        val historyMap: HashMap<Int, Long> = hashMapOf()
-        var sinceLastBestFoundSolution = 0
-        val prevSolutions: HashSet<Long> = hashSetOf()
-        var I = 0
-        var idleI = 0
-        (0 until historyLength).forEach { historyMap[it] = currentCost }
+        val deltaW: MutableList<Long> = mutableListOf()
+        val finaTemperature = 0.1
+        var sinceLastBestFoundSolution: Int = 0
+
         // Add equal weights to the operators
         for (operator in operators) {
             randomSelection.add(1.0, operator)
             operatorScoreMap[operator] = 1.0
         }
 
+        // Warm up
+        for (w in 0 until 100) {
+            val operator: Operator = randomSelection.next()
+            val newSolution = operator.run(incumbentSolution, world)
+            val deltaE = calculateCost(newSolution, world) - calculateCost(incumbentSolution, world)
+            if (feasibilityCheck(newSolution, world).isOk() && deltaE < 0) {
+                incumbentSolution = newSolution
+                operatorScoreMap[operator] = operatorScoreMap[operator]?.plus(1.0)!!
+                if (calculateCost(incumbentSolution, world) < calculateCost(bestSolution, world)) {
+                    bestSolution = incumbentSolution
+                    operatorScoreMap[operator] = operatorScoreMap[operator]?.plus(2.0)!!
+                    sinceLastBestFoundSolution = 0
+                }
+            } else if (feasibilityCheck(newSolution, world).isOk() && Random.nextDouble() < 0.8) {
+                incumbentSolution = newSolution
+            }
+            deltaW.add(deltaE)
+            sinceLastBestFoundSolution++
+        }
+        randomSelection = RandomCollection()
+        operatorScoreMap.forEach { randomSelection.add(it.value, it.key) } // TODO: Optimize this
+        for (operator in operators) {
+            operatorScoreMap[operator] = 1.0
+        }
 
-        for (i in 1..20000) {
+        val deltaAverage = deltaW.average()
+        val t0 = -deltaAverage / ln(0.8)
+        val alpha = (finaTemperature / t0).pow(1 / 9900)
+        var T = t0
 
+        for (i in 1..9900) {
 
             // Escape algorithm
-            if (sinceLastBestFoundSolution > 300) {
-                for (e in 0 until 50) {
+            if (sinceLastBestFoundSolution > 100) {
+                for (e in 0 until 20) {
                     val tempSolution = InsertK().run(currentSolution, world)
                     if (feasibilityCheck(tempSolution, world).isOk())
                         currentSolution = tempSolution
+                }
+                if (feasibilityCheck(currentSolution, world).isOk() && calculateCost(currentSolution,
+                        world) < calculateCost(bestSolution, world)
+                ) {
+                    bestSolution = currentSolution
 
-                    if (feasibilityCheck(currentSolution, world).isOk() && calculateCost(currentSolution,
-                            world) < calculateCost(bestSolution, world)
-                    ) {
-                        bestSolution = currentSolution
-
-                    }
                 }
                 sinceLastBestFoundSolution = 0
 
             }
             val nextOperator: Operator = randomSelection.next()
             incumbentSolution = nextOperator.run(currentSolution, world)
-            val incumbentCost = calculateCost(incumbentSolution, world)
+            val deltaE = calculateCost(incumbentSolution, world) - calculateCost(currentSolution, world)
 
-            if (feasibilityCheck(incumbentSolution, world).isOk()) {
-                if (prevSolutions.add(incumbentCost)) {
-                    operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]!! + 5
-                }
-                // Calculate the virtual beginning v:= I mod Lh
-                val v: Int = I % historyLength
-                if (incumbentCost < historyMap[v]!! || incumbentCost < currentCost) {
-                    currentSolution = incumbentSolution
-                    currentCost = incumbentCost
-                    operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]!! + 10
 
-                    if (currentCost < bestCost) {
-                        bestCost = currentCost
-                        bestSolution = currentSolution
-                        operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]!! + 15
-                        sinceLastBestFoundSolution = 0
-
-                    }
+            if (feasibilityCheck(incumbentSolution, world).isOk() && deltaE < 0) {
+                currentSolution = incumbentSolution
+                operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]!! + 10
+                if (calculateCost(currentSolution, world) < calculateCost(bestSolution, world)) {
+                    bestSolution = currentSolution
+                    operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]!! + 15
+                    sinceLastBestFoundSolution = 0
                 }
-                if (currentCost < historyMap[v]!!) {
-                    historyMap[v] = currentCost
-                }
+            } else if (feasibilityCheck(incumbentSolution,
+                    world).isOk() && Random.nextDouble() < Math.E.pow(-deltaE / T)
+            ) {
+                currentSolution = incumbentSolution
             }
-
+            T *= alpha
 
             // Update random selection score every 100 iteration
             if (i % 100 == 0) {
@@ -98,9 +113,10 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
                 }
 
             }
-            I++
+
             sinceLastBestFoundSolution++
         }
+
         return bestSolution
 
     }
@@ -114,4 +130,3 @@ fun main() {
     val operatorList = listOf(OneInsert(), InsertK())
     algorithm.runSetOperator(solution, operatorList, world)
 }
-
