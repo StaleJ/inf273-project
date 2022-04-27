@@ -1,4 +1,5 @@
 import algorithms.AdaptiveLargeNeighborhoodSearch
+import algorithms.HillClimbingSearch
 import algorithms.Algorithm
 import classes.Result
 import classes.World
