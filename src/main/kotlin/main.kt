@@ -51,7 +51,6 @@ class RunInstance {
             }
             val bestCost = calculateCost(bestSolution, world)
             val improvement = 100 * (initialCost - bestCost) / initialCost
-
             val result = Result("CALL $v AND VEHICLE ${vehicles[i]}",
                 average / nIterations,
                 bestCost,
@@ -100,7 +99,7 @@ class RunInstance {
             val bestCost = calculateCost(bestSolution, world)
             val improvement = 100 * (initialCost - bestCost) / initialCost
 
-            val result = Result("CALL $v AND VEHICLE ${vehicles[i]}",
+            val result = Result("Instance ${i + 1}# CALL $v AND VEHICLE ${vehicles[i]}",
                 average / nIterations,
                 bestCost,
                 improvement,

@@ -14,7 +14,7 @@ class GreedyDummy : Operator {
             var biggestSize = world.calls[callInDummy].costNotTransport
             for (call in vehicle.values.last()) {
                 val currentSize = world.calls[call - 1].costNotTransport
-                if (currentSize < biggestSize) {
+                if (currentSize > biggestSize) {
                     callInDummy = call - 1
                     biggestSize = currentSize
                 }
