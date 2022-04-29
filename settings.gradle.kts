@@ -1,3 +1,4 @@
 
-rootProject.name = "inf273-utils"
+rootProject.name = "MetaHeuristics"
+include("RunInstance")
 
