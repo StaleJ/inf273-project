@@ -82,7 +82,7 @@ class RunInstance {
         println(name)
         for ((i, v) in files.withIndex()) {
             val bestMap: HashMap<Int, Long> =
-                hashMapOf(7 to 1134176, 18 to 2922974, 35 to 8947883, 80 to 15994246, 130 to 21467471, 300 to 44455891)
+                hashMapOf(7 to 1134176, 18 to 2701284, 35 to 6687308, 80 to 14551763, 130 to 21467471, 300 to 44455891)
             val world: World = v
             val initialSolution = createWorstCase(world)
             val initialCost = calculateCost(initialSolution, world)
@@ -96,7 +96,7 @@ class RunInstance {
                     measureTimeMillis { incumbent = algorithm.runSetOperator(initialSolution, operatorList, world) }
                 time += instance
                 val incumbentCost = calculateCost(incumbent, world)
-                println("run ${j + 1} time: ${TimeUnit.MILLISECONDS.toSeconds(instance)}s score: $incumbentCost")
+                println("run ${j + 1} time: ${TimeUnit.MILLISECONDS.toSeconds(instance)}s score: $incumbentCost From best found: ${incumbentCost - bestMap[world.calls.size]!!} ")
                 average += incumbentCost
                 if (incumbentCost < calculateCost(bestSolution, world)) {
                     bestSolution = incumbent
@@ -106,7 +106,7 @@ class RunInstance {
             val bestCost = calculateCost(bestSolution, world)
             val improvement = 100 * (initialCost - bestCost) / initialCost
 
-            val result = Result("Instance ${i + 1}# CALL ${world.calls.size} AND VEHICLE ${world.vehicles.size}",
+            val result = Result("Instance #${i + 1} CALL ${world.calls.size} AND VEHICLE ${world.vehicles.size}",
                 average / nIterations,
                 bestCost,
                 improvement,
