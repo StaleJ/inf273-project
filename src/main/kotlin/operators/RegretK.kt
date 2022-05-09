@@ -5,17 +5,14 @@ import classes.World
 import utils.calculateCost
 import utils.feasibilityCheck
 import utils.parseInput
-import java.util.Collections.asLifoQueue
 import java.util.Collections.max
-import java.util.Deque
-import java.util.Queue
 
 class RegretK : Operator {
     override fun run(solution: MutableList<Int>, world: World): MutableList<Int> {
-        return runRegretK(solution, runRandomRemove(solution, world, 3), world, 3)
+        return runRegretK(solution, runRandomRemove(solution, world, 5), world, 5)
     }
 
-    private fun runRandomRemove(solution: MutableList<Int>, world: World, k: Int): MutableList<Int>{
+    private fun runRandomRemove(solution: MutableList<Int>, world: World, k: Int): MutableList<Int> {
         val vehicles: HashMap<Int, MutableList<Int>> = createVehicleMap(solution, world)
         val callsToTake: MutableList<Int> = mutableListOf()
         val listCalls: MutableSet<Int> = mutableSetOf()
@@ -193,16 +190,20 @@ class RegretK : Operator {
             if (regretQueue.isEmpty())
                 return solution
             regretQueue.sort()
+            val best = regretQueue.removeFirst()
             while (regretQueue.isNotEmpty()) {
-                    regretValueList[call] = regretValueList[call]!! + regretQueue.removeFirst()
+                regretValueList[call] = regretValueList[call]!! + regretQueue.removeFirst() - best
             }
 
 
         }
-        val regretCall = max(regretValueList.entries, java.util.Map.Entry.comparingByValue()).key
+        var sol: MutableList<Int> = solution
+        for (c in regretValueList.toSortedMap().keys.reversed()) {
+            sol = insertBest(sol, world, c)
+        }
 
 
-        return insertBest(solution, world, regretCall)
+        return sol
 
     }
 

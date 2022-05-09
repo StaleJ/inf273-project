@@ -22,12 +22,12 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
         world: World,
     ): MutableList<Int> {
         var bestSolution: MutableList<Int> = initialSolution
-        var bestCost : Long = calculateCost(bestSolution, world)
+        var bestCost: Long = calculateCost(bestSolution, world)
         var randomSelection: RandomCollection<Operator> = RandomCollection()
         var currentSolution: MutableList<Int> = initialSolution
-        var currentCost : Long = bestCost
+        var currentCost: Long = bestCost
         var incumbentSolution: MutableList<Int> = initialSolution
-        var incumbentCost : Long = bestCost
+        var incumbentCost: Long = bestCost
         val operatorScoreMap: HashMap<Operator, Double> = hashMapOf()
         val deltaW: MutableList<Long> = mutableListOf()
         val finaTemperature = 0.1
@@ -44,7 +44,7 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
         for (w in 0 until 200) {
             val operator: Operator = randomSelection.next()
             val newSolution = operator.run(incumbentSolution, world)
-            if (feasibilityCheck(newSolution, world).isOk()) {
+            if (newSolution != incumbentSolution && feasibilityCheck(newSolution, world).isOk()) {
                 val newCost = calculateCost(newSolution, world)
                 val deltaE = newCost - incumbentCost
                 if (deltaE < 0) {
@@ -82,15 +82,14 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
             if (sinceLastBestFoundSolution > 300) {
                 for (e in 0 until 20) {
                     val tempSolution = InsertK().run(currentSolution, world)
-                    if (feasibilityCheck(tempSolution, world).isOk())
-                        currentSolution = tempSolution
-                        currentCost = calculateCost(currentSolution,
-                            world)
-                    if (feasibilityCheck(currentSolution, world).isOk() && currentCost  < bestCost
-                    ) {
+                    if (currentSolution != incumbentSolution && feasibilityCheck(tempSolution,
+                            world).isOk()
+                    ) currentSolution = tempSolution
+                    currentCost = calculateCost(currentSolution, world)
+                    if (feasibilityCheck(currentSolution, world).isOk() && currentCost < bestCost) {
                         bestSolution = currentSolution
                         bestCost = currentCost
-                }
+                    }
 
 
                 }
@@ -112,10 +111,8 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
                         bestCost = currentCost
                         operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]!! + 15
                         sinceLastBestFoundSolution = 0
-                        println(nextOperator)
                     }
-                } else if (Random.nextDouble() < Math.E.pow(-deltaE / T)
-                ) {
+                } else if (Random.nextDouble() < Math.E.pow(-deltaE / T)) {
                     currentSolution = incumbentSolution
                 }
 

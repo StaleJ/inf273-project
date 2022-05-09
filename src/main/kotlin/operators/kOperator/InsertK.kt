@@ -11,7 +11,7 @@ class InsertK : Operator {
         val callsToTake: MutableList<Int> = mutableListOf()
         val listCalls: MutableSet<Int> = mutableSetOf()
         val newSolution: MutableList<Int> = mutableListOf()
-        val k: Int = Random.nextInt(2, world.calls.size)
+        val k: Int = Random.nextInt(6, world.calls.size)
 
         for (i in 1..world.calls.size) {
             callsToTake.add(i)

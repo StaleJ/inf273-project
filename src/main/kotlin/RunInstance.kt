@@ -125,8 +125,54 @@ class RunInstance {
     }
 
 
-    fun examRun() {
-        TODO("Needs implement exam run")
+    fun examRun(
+        algorithm: Algorithm,
+        operatorList: List<Operator>,
+        name: String,
+        files: MutableList<World>,
+    ): MutableList<Result> {
+        val listResult = mutableListOf<Result>()
+
+        println(name)
+        for ((i, v) in files.withIndex()) {
+            val world: World = v
+            println("Start Instance #${i + 1} CALL ${world.calls.size} AND VEHICLE ${world.vehicles.size}")
+            val initialSolution = createWorstCase(world)
+            val initialCost = calculateCost(initialSolution, world)
+            var bestSolution = initialSolution
+            var average: Long = 0
+            var time: Long = 0
+            val nIterations = 1
+            for (j in 0 until nIterations) {
+                val incumbent: MutableList<Int>
+                val instance =
+                    measureTimeMillis { incumbent = algorithm.runSetOperator(initialSolution, operatorList, world) }
+                time += instance
+                val incumbentCost = calculateCost(incumbent, world)
+                average += incumbentCost
+                if (incumbentCost < calculateCost(bestSolution, world)) {
+                    bestSolution = incumbent
+                }
+
+            }
+            val bestCost = calculateCost(bestSolution, world)
+            val improvement = 100 * (initialCost - bestCost) / initialCost
+
+            val result = Result("Instance #${i + 1} CALL ${world.calls.size} AND VEHICLE ${world.vehicles.size}",
+                average / nIterations,
+                bestCost,
+                improvement,
+                time / nIterations,
+                bestSolution)
+
+            listResult.add(result)
+            println(result.toString())
+
+
+        }
+
+        return listResult
+
     }
 }
 
@@ -137,8 +183,7 @@ fun main() {
     //val resultFile = File("results/result.json")
     val files: MutableList<World> = mutableListOf()
     File("resources/").walk().forEach {
-        if (it.toString().endsWith(".txt"))
-            files.add(parseInput(it.toString()))
+        if (it.toString().endsWith(".txt")) files.add(parseInput(it.toString()))
     }
     Files.createDirectories(Paths.get("resources")) // Creates directory if not
     files.sortBy { it.calls.size }
@@ -146,8 +191,7 @@ fun main() {
 
     val operators: List<Operator> =
         listOf(InsertBest(), OptimizeVehicle(), InsertK(), OneInsert(), MoveDummy(), GreedyDummy())
-    solutionMap["ALNS"] =
-        RunInstance().runInstanceOperatorSet(AdaptiveLargeNeighborhoodSearch(), operators, "ALNS", files)
+    solutionMap["ALNS"] = RunInstance().examRun(AdaptiveLargeNeighborhoodSearch(), operators, "Exam Run", files)
 
 //    val jsonMap = gson.toJson(solutionMap)
 //    resultFile.writeText(jsonMap)
