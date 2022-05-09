@@ -41,7 +41,7 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
         }
 
         // Warm up
-        for (w in 0 until 100) {
+        for (w in 0 until 200) {
             val operator: Operator = randomSelection.next()
             val newSolution = operator.run(incumbentSolution, world)
             if (feasibilityCheck(newSolution, world).isOk()) {
@@ -73,10 +73,10 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
 
         val deltaAverage = deltaW.average()
         val t0 = -deltaAverage / ln(0.8)
-        val alpha = (finaTemperature / t0).pow(1 / 9900)
+        val alpha = (finaTemperature / t0).pow(1 / 19800)
         var T = t0
 
-        for (i in 1..19900) {
+        for (i in 1..19800) {
 
             // Escape algorithm
             if (sinceLastBestFoundSolution > 300) {
@@ -112,6 +112,7 @@ class AdaptiveLargeNeighborhoodSearch : Algorithm {
                         bestCost = currentCost
                         operatorScoreMap[nextOperator] = operatorScoreMap[nextOperator]!! + 15
                         sinceLastBestFoundSolution = 0
+                        println(nextOperator)
                     }
                 } else if (Random.nextDouble() < Math.E.pow(-deltaE / T)
                 ) {
